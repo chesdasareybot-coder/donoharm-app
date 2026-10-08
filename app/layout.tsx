@@ -1,0 +1,231 @@
+import type { Metadata } from "next";
+import { Geist, Geist_Mono, Kantumruy_Pro } from "next/font/google";
+import { cookies, headers } from "next/headers";
+import { withAuth } from "@workos-inc/authkit-nextjs";
+import "./globals.css";
+
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
+import { GlobalStateProvider } from "./contexts/GlobalState";
+import { AgentAutoReviewAvailabilityProvider } from "./contexts/AgentAutoReviewAvailabilityContext";
+import { ConvexClientProvider } from "@/components/ConvexClientProvider";
+import { TodoBlockProvider } from "./contexts/TodoBlockContext";
+import { AgentApprovalProvider } from "./contexts/AgentApprovalContext";
+import { AnalyticsConsentManager } from "./components/AnalyticsConsentManager";
+import { DataStreamProvider } from "./components/DataStreamProvider";
+import { ChunkLoadRecovery } from "./components/ChunkLoadRecovery";
+import { BillingRecoveryReturnNotice } from "./components/BillingRecoveryReturnNotice";
+import { resolveClientInitialAuth } from "@/lib/auth/initial-auth";
+import { FIRST_TOUCH_ATTRIBUTION_COOKIE_NAME } from "@/lib/analytics/acquisition";
+import { parseFirstTouchAttributionCookie } from "@/lib/analytics/acquisition-cookie";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  ORGANIZATION_JSON_LD,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  WEBSITE_JSON_LD,
+} from "@/lib/seo/site";
+import {
+  ANALYTICS_CONSENT_COOKIE_NAME,
+  countryCodeFromHeaders,
+  getAnalyticsConsentDecision,
+} from "@/lib/privacy/analytics-consent";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { IntercomMessenger } from "./components/IntercomMessenger";
+import { createIntercomMessengerIdentity } from "@/lib/intercom/messenger";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const kantumruyPro = Kantumruy_Pro({
+  variable: "--font-kantumruy-pro",
+  subsets: ["khmer", "latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const APP_NAME = SITE_NAME;
+const APP_DEFAULT_TITLE = "DoNoHarm - AI-Powered Penetration Testing Assistant";
+const APP_TITLE_TEMPLATE = "%s | DoNoHarm";
+const APP_DESCRIPTION = SITE_DESCRIPTION;
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  applicationName: APP_NAME,
+  title: {
+    default: APP_DEFAULT_TITLE,
+    template: "%s",
+  },
+  description: APP_DESCRIPTION,
+  manifest: "/manifest.json",
+  keywords: [
+    "hackerai",
+    "pentestgpt",
+    "hacker ai",
+    "pentest ai",
+    "penetration testing tool",
+    "penetration testing ai",
+    "hacking ai",
+    "pentesting ai",
+    "pentest automation",
+    "security assessment ai",
+    "vulnerability scanner ai",
+    "offensive security ai",
+    "red team ai",
+    "cybersecurity ai assistant",
+    "bug bounty ai",
+    "pentest gpt",
+    "security ai",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: APP_NAME,
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+    images: [
+      {
+        url: "https://hackerai.co/icon-512x512.png",
+        width: 512,
+        height: 512,
+        alt: "HackerAI",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+    images: [
+      {
+        url: "https://hackerai.co/icon-512x512.png",
+        width: 512,
+        height: 512,
+        alt: "HackerAI",
+      },
+    ],
+  },
+};
+
+async function getInitialAuth() {
+  const requestHeaders = await headers();
+
+  // Static public pages are prerendered without proxy-injected AuthKit headers.
+  if (!requestHeaders.has("x-workos-middleware")) {
+    return { user: null } as const;
+  }
+
+  // Never serialize the server-only access token into the client provider.
+  // An ended refresh session is equivalent to being signed out; hydrating that
+  // state keeps the root layout available so the user can sign in again.
+  return resolveClientInitialAuth(withAuth);
+}
+
+/** Renders the application shell with server-resolved auth and integrations. */
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  // Supplying server-resolved auth prevents AuthKitProvider from invoking its
+  // getAuth Server Action on every mount.
+  const [initialAuth, cookieStore, requestHeaders] = await Promise.all([
+    getInitialAuth(),
+    cookies(),
+    headers(),
+  ]);
+  const intercomIdentity = initialAuth.user
+    ? await createIntercomMessengerIdentity(initialAuth.user)
+    : null;
+  const firstTouchAttribution = parseFirstTouchAttributionCookie(
+    cookieStore.get(FIRST_TOUCH_ATTRIBUTION_COOKIE_NAME)?.value,
+  );
+  const countryCode = countryCodeFromHeaders(requestHeaders);
+  const analyticsConsent = getAnalyticsConsentDecision({
+    cookieValue: cookieStore.get(ANALYTICS_CONSENT_COOKIE_NAME)?.value,
+    countryCode,
+    // If a production proxy ever stops providing country data, ask rather
+    // than silently placing optional analytics storage on a covered visitor.
+    failClosed: process.env.NODE_ENV === "production",
+  });
+
+  const content = (
+    <GlobalStateProvider>
+      <AnalyticsConsentManager
+        consentRequired={analyticsConsent.consentRequired}
+        firstTouchAttribution={firstTouchAttribution}
+        initialConsent={analyticsConsent.consent}
+        initialDecisionResolved={countryCode !== null}
+      >
+        <AgentAutoReviewAvailabilityProvider>
+          <ChunkLoadRecovery />
+          <DataStreamProvider>
+            <TodoBlockProvider>
+              <AgentApprovalProvider>
+                <TooltipProvider>
+                  {children}
+                  <Toaster />
+                  <BillingRecoveryReturnNotice />
+                </TooltipProvider>
+              </AgentApprovalProvider>
+            </TodoBlockProvider>
+          </DataStreamProvider>
+        </AgentAutoReviewAvailabilityProvider>
+      </AnalyticsConsentManager>
+    </GlobalStateProvider>
+  );
+
+  return (
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} ${kantumruyPro.variable} h-full`}
+      suppressHydrationWarning
+    >
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&display=swap"
+          rel="stylesheet"
+        />
+        <JsonLd data={ORGANIZATION_JSON_LD} />
+        <JsonLd data={WEBSITE_JSON_LD} />
+      </head>
+      <body className="antialiased h-full">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ConvexClientProvider initialAuth={initialAuth}>
+            {content}
+            <IntercomMessenger identity={intercomIdentity} />
+          </ConvexClientProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DoNoHarm</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          sans-serif;
+        background: #0a0a0a;
+        color: #fafafa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .loader {
+        text-align: center;
+      }
+      .spinner {
+        width: 44px;
+        height: 44px;
+        border: 3px solid #27272a;
+        border-top-color: #10b981;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 16px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .error-state {
+        display: none;
+        max-width: 460px;
+        padding: 24px;
+        text-align: center;
+      }
+      .error-state.visible {
+        display: block;
+      }
+      .error-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 16px;
+        color: #ef4444;
+      }
+      .error-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .error-message {
+        color: #a1a1aa;
+        margin-bottom: 24px;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+      .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .btn {
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+      }
+      .btn-primary {
+        background: #10b981;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #059669;
+      }
+      .btn-secondary {
+        background: #18181b;
+        color: #e4e4e7;
+        border-color: #27272a;
+      }
+      .btn-secondary:hover {
+        background: #27272a;
+      }
+      @media (prefers-color-scheme: light) {
+        body {
+          background: #ffffff;
+          color: #141414;
+        }
+        .spinner {
+          border-color: #e5e5e5;
+          border-top-color: #10b981;
+        }
+        .error-message {
+          color: #52525b;
+        }
+        .btn-secondary {
+          background: #f4f4f5;
+          color: #18181b;
+          border-color: #e4e4e7;
+        }
+        .btn-secondary:hover {
+          background: #e4e4e7;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+      <p id="status-text">Connecting to DoNoHarm...</p>
+    </div>
+    <div class="error-state" id="error-state">
+      <svg
+        class="error-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <p class="error-title">Connection Status</p>
+      <p class="error-message" id="error-message">
+        Checking connection to DoNoHarm server...
+      </p>
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-cloud" onclick="connectCloud()">
+          Connect to Cloud Server
+        </button>
+        <button class="btn btn-secondary" id="btn-local" onclick="connectLocal()">
+          Connect to Local Server (localhost:3000)
+        </button>
+        <button class="btn btn-secondary" id="btn-retry" onclick="retry()">
+          Retry Automatic Connection
+        </button>
+      </div>
+    </div>
+    <script>
+      const LOCAL_URL = "http://localhost:3000";
+      const CLOUD_URL = "https://indigo-walrus-294806.hostingersite.com";
+
+      function showLoader(text) {
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("error-state").classList.remove("visible");
+        if (text) {
+          document.getElementById("status-text").textContent = text;
+        }
+      }
+
+      function showError(message) {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("error-state").classList.add("visible");
+        document.getElementById("error-message").textContent = message;
+      }
+
+      function connectCloud() {
+        showLoader("Connecting to Cloud Server...");
+        window.location.href = CLOUD_URL;
+      }
+
+      function connectLocal() {
+        showLoader("Connecting to Local Server...");
+        window.location.href = LOCAL_URL;
+      }
+
+      async function checkReachable(url, timeoutMs = 3000) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+          await fetch(url, {
+            method: "HEAD",
+            mode: "no-cors",
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      async function retry() {
+        showLoader("Connecting to DoNoHarm...");
+
+        // 1. Try local dev server first
+        const isLocalOnline = await checkReachable(LOCAL_URL, 2000);
+        if (isLocalOnline) {
+          window.location.href = LOCAL_URL;
+          return;
+        }
+
+        // 2. Try deployed Hostinger cloud server
+        showLoader("Connecting to Cloud Server...");
+        const isCloudOnline = await checkReachable(CLOUD_URL, 3500);
+        if (isCloudOnline) {
+          window.location.href = CLOUD_URL;
+          return;
+        }
+
+        // 3. Neither reached: show helpful choice
+        showError(
+          "Unable to connect to local server (localhost:3000) or cloud server. Please choose a server to connect to, or check your internet connection."
+        );
+      }
+
+      window.addEventListener("online", retry);
+      retry();
+    </script>
+  </body>
+</html>

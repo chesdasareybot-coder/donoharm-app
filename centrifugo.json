@@ -1,0 +1,27 @@
+{
+  "token_hmac_secret_key": "donoharm_centrifugo_secret_token_key_2026",
+  "admin": false,
+  "api_key": "",
+  "allowed_origins": [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "tauri://localhost",
+    "https://tauri.localhost"
+  ],
+  "namespaces": [
+    {
+      "name": "sandbox",
+      "allow_user_limited_channels": true,
+      "allow_publish_for_subscriber": true,
+      "presence": true,
+      "allow_presence_for_subscriber": true,
+      "join_leave": true,
+      "history_size": 100,
+      "history_ttl": "60s"
+    }
+  ],
+  "port": 8000,
+  "grpc_api": false,
+  "log_level": "info",
+  "client_connection_limit": 5000
+}
