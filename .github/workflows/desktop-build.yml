@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 env:
-  APP_URL: https://hackerai.co
+  APP_URL: https://chesdasareybot-coder-donoharm-app.vercel.app
 
 jobs:
   prepare:
