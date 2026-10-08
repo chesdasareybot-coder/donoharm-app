@@ -7,7 +7,7 @@ const CLOUD_URL =
   process.env.CLOUD_URL ||
   (process.env.APP_URL && !process.env.APP_URL.includes("localhost")
     ? process.env.APP_URL
-    : "https://indigo-walrus-294806.hostingersite.com");
+    : "https://chesdasareybot-coder-donoharm-app.vercel.app");
 
 const srcPath = path.join(__dirname, "../src/index.html");
 
