@@ -96,9 +96,12 @@ export const createAgentResumeGet =
         const run = await runs.retrieve(runId);
         runStatus = run.status;
       } catch (err) {
-        // Only treat a 404 as "run gone" so we self-heal the stored id.
+        // Only treat a 404/401/403 as "run gone" so we self-heal the stored id.
         // Re-throw transient errors (network, 5xx) to leave the mapping intact.
-        if (err instanceof ApiError && err.status === 404) {
+        if (
+          err instanceof ApiError &&
+          (err.status === 404 || err.status === 401 || err.status === 403)
+        ) {
           runStatus = "EXPIRED";
         } else {
           throw err;
