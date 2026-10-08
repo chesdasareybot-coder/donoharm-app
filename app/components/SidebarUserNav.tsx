@@ -190,7 +190,7 @@ const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
 
   const handleGitHub = () => {
     const newWindow = window.open(
-      "https://github.com/chesdasareybot-coder/sophearith-hackerai",
+      "https://github.com/chesdasareybot-coder/donoharm-app",
       "_blank",
       "noopener,noreferrer",
     );

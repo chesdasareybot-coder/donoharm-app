@@ -8,7 +8,7 @@ export const SITE_DESCRIPTION =
 export const SITE_LOGO_URL = `${SITE_URL}/icon-512x512.png`;
 export const SITE_SCREENSHOT_URL = `${SITE_URL}/images/hackerai-workspace.png`;
 export const GITHUB_URL =
-  "https://github.com/chesdasareybot-coder/sophearith-hackerai";
+  "https://github.com/chesdasareybot-coder/donoharm-app";
 export const HELP_CENTER_URL = "https://help.hackerai.co/en/";
 export const LOCAL_AGENT_HELP_URL =
   "https://help.hackerai.co/en/articles/12961920-connecting-a-hackerai-agent-to-your-local-machine";

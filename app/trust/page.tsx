@@ -386,7 +386,7 @@ function TrustContent() {
               <p>
                 HackerAI is developed in the open. The full application source
                 code is public on{" "}
-                <InlineLink href="https://github.com/chesdasareybot-coder/sophearith-hackerai">
+                <InlineLink href="https://github.com/chesdasareybot-coder/donoharm-app">
                   GitHub
                 </InlineLink>
                 , including every change we ship. You can review how prompts,

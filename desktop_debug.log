@@ -1,23 +1,18 @@
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Main window found in setup: visible=Ok(true)
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Deep links registered successfully
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] HackerAI Desktop initialized
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Tauri run event: Ready
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Running update check on launch
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Command server listening on http://127.0.0.1:20438
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Tauri run event: WindowEvent { label: "main", event: Focused(true) }
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Window "main" event: Focused(true)
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Window "main" page load: url=Url { scheme: "http", cannot_be_a_base: false, username: "", password: None, host: Some(Domain("tauri.localhost")), port: None, path: "/", query: None, fragment: None } event=Started
-[2026-10-08T09:21:40Z INFO  hackerai_desktop_lib] Window "main" page load: url=Url { scheme: "http", cannot_be_a_base: false, username: "", password: None, host: Some(Domain("tauri.localhost")), port: None, path: "/", query: None, fragment: None } event=Finished
-[2026-10-08T09:21:41Z INFO  hackerai_desktop_lib] No updates available (auto-check)
-[2026-10-08T09:21:41Z INFO  hackerai_desktop_lib] Tauri run event: WindowEvent { label: "main", event: Focused(false) }
-[2026-10-08T09:21:41Z INFO  hackerai_desktop_lib] Window "main" event: Focused(false)
-[2026-10-08T09:21:41Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
-[2026-10-08T09:22:23Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
-[2026-10-08T09:22:23Z INFO  hackerai_desktop_lib] Tauri run event: WindowEvent { label: "main", event: Focused(true) }
-[2026-10-08T09:22:23Z INFO  hackerai_desktop_lib] Window "main" event: Focused(true)
-[2026-10-08T09:22:23Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
-[2026-10-08T09:22:24Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
-[2026-10-08T09:22:24Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
-[2026-10-08T09:22:27Z INFO  hackerai_desktop_lib] Window "main" event: CloseRequested { api: CloseRequestApi(Sender { .. }) }
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Main window found in setup: visible=Ok(true)
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Deep links registered successfully
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] HackerAI Desktop initialized
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Running update check on launch
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Tauri run event: Ready
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Command server listening on http://127.0.0.1:58966
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Tauri run event: WindowEvent { label: "main", event: Focused(true) }
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Window "main" event: Focused(true)
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Window "main" page load: url=Url { scheme: "http", cannot_be_a_base: false, username: "", password: None, host: Some(Domain("tauri.localhost")), port: None, path: "/", query: None, fragment: None } event=Started
+[2026-10-08T11:20:44Z INFO  hackerai_desktop_lib] Window "main" page load: url=Url { scheme: "http", cannot_be_a_base: false, username: "", password: None, host: Some(Domain("tauri.localhost")), port: None, path: "/", query: None, fragment: None } event=Finished
+[2026-10-08T11:20:45Z INFO  hackerai_desktop_lib] No updates available (auto-check)
+[2026-10-08T11:20:46Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
+[2026-10-08T11:20:46Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
+[2026-10-08T11:20:46Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
+[2026-10-08T11:20:46Z INFO  hackerai_desktop_lib] Tauri run event: MainEventsCleared
+[2026-10-08T11:20:48Z INFO  hackerai_desktop_lib] Window "main" event: CloseRequested { api: CloseRequestApi(Sender { .. }) }
